@@ -16,4 +16,12 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+//get favorite pirates (expand pirate)
+//get pirate by id
+//get pirate with name and ship
+//get stories (expand pirate)
+//get follower by follower id and pirate id
+//post follower
+//delete follower
+
 app.Run();
