@@ -1,5 +1,4 @@
 namespace Buccaneer.Models.DTOs;
-
 class GetFollowerDTO
 {
     public int Id { get; set; }

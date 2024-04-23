@@ -1,6 +1,6 @@
 using Buccaneer.Models;
 using Buccaneer.Models.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -142,7 +142,7 @@ app.UseHttpsRedirection();
 //get favorite pirates (expand pirate)
 app.MapGet(
     "/followers",
-    (int? followerId) =>
+    (int? followerId, int? pirateId) =>
     {
         List<Follower> returningFollowers = followers;
         if (followerId != null)
@@ -156,6 +156,15 @@ app.MapGet(
                 return Results.BadRequest();
             }
         }
+        if (pirateId != null)
+        {
+            returningFollowers = returningFollowers.Where(follower => follower.PirateId == pirateId).ToList();
+        }
+        if (returningFollowers.Count == 0)
+        {
+            return Results.BadRequest();
+        }
+
         return Results.Ok(
             returningFollowers.Select(follower =>
             {
