@@ -140,6 +140,47 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 //get favorite pirates (expand pirate)
+app.MapGet(
+    "/followers",
+    (int? followerId) =>
+    {
+        List<Follower> returningFollowers = followers;
+        if (followerId != null)
+        {
+            returningFollowers = returningFollowers
+                .Where(follower => follower.FollowerId == followerId)
+                .ToList();
+
+            if (returningFollowers.Count == 0)
+            {
+                return Results.BadRequest();
+            }
+        }
+        return Results.Ok(
+            returningFollowers.Select(follower =>
+            {
+                Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
+                return new GetFollowerDTO
+                {
+                    Id = follower.Id,
+                    PirateId = follower.PirateId,
+                    FollowerId = follower.FollowerId,
+                    Pirate = new GetFollowerPirateDTO
+                    {
+                        Id = pirate.Id,
+                        Name = pirate.Name,
+                        Age = pirate.Age,
+                        Nationality = pirate.Nationality,
+                        Rank = pirate.Rank,
+                        Ship = pirate.Ship,
+                        ImageUrl = pirate.ImageUrl
+                    }
+                };
+            })
+        );
+    }
+);
+
 //get pirate by id
 //get pirate with name and ship
 //get stories (expand pirate)
@@ -153,39 +194,40 @@ app.MapGet(
     "/pirates/{id}",
     (int id) =>
     {
-
         Pirate pirate = pirates.FirstOrDefault(p => p.Id == id);
-    
+
         if (pirate == null)
         {
             return Results.BadRequest("Pirate ID is null");
         }
 
-        return Results.Ok(new PirateDTO
-        {
-            Id = pirate.Id,
-            Name = pirate.Name,
-            Age = pirate.Age,
-            Nationality = pirate.Nationality,
-            Rank = pirate.Rank,
-            Ship = pirate.Ship,
-            ImageUrl = pirate.ImageUrl
-
-        });
-    } 
+        return Results.Ok(
+            new PirateDTO
+            {
+                Id = pirate.Id,
+                Name = pirate.Name,
+                Age = pirate.Age,
+                Nationality = pirate.Nationality,
+                Rank = pirate.Rank,
+                Ship = pirate.Ship,
+                ImageUrl = pirate.ImageUrl
+            }
+        );
+    }
 );
 
-
-app.MapGet("/stories", () =>
-{
-    return stories.Select(s => new StoryDTO
+app.MapGet(
+    "/stories",
+    () =>
     {
-        Id = s.Id,
-        PirateId = s.PirateId,
-        Title = s.Title,
-        Content = s.Content,
-
-    });
-});
+        return stories.Select(s => new StoryDTO
+        {
+            Id = s.Id,
+            PirateId = s.PirateId,
+            Title = s.Title,
+            Content = s.Content,
+        });
+    }
+);
 
 app.Run();
