@@ -145,11 +145,18 @@ app.MapGet(
     "/pirates",
     (string? name, string? ship) =>
     {
-        Pirate pirate = pirates.FirstOrDefault(pirate =>
-            pirate.Name == name && pirate.Ship == ship
-        );
+        List<Pirate> returnPirates = pirates;
 
-        return new GetPirateDTO
+        // if(name != null)
+        // {
+
+        // }
+
+        // Pirate pirate = pirates.FirstOrDefault(pirate =>
+        //     pirate.Name == name && pirate.Ship == ship
+        // );
+
+        return returnPirates.Select(pirate => new GetPirateDTO
         {
             Id = pirate.Id,
             Name = pirate.Name,
@@ -158,7 +165,7 @@ app.MapGet(
             Rank = pirate.Rank,
             Ship = pirate.Ship,
             ImageUrl = pirate.ImageUrl,
-        };
+        });
     }
 );
 
