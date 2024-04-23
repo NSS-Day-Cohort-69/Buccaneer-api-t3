@@ -151,11 +151,25 @@ app.MapGet(
                 .ToList();
         }
         return returningFollowers.Select(follower =>
-        new GetFollowerDTO
         {
-
-        }
-        )
+            Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
+            return new GetFollowerDTO
+            {
+                Id = follower.Id,
+                PirateId = follower.PirateId,
+                FollowerId = follower.FollowerId,
+                Pirate = new GetFollowerPirateDTO
+                {
+                    Id = pirate.Id,
+                    Name = pirate.Name,
+                    Age = pirate.Age,
+                    Nationality = pirate.Nationality,
+                    Rank = pirate.Rank,
+                    Ship = pirate.Ship,
+                    ImageUrl = pirate.ImageUrl
+                }
+            };
+        });
     }
 );
 
