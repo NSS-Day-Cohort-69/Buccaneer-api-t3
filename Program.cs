@@ -145,7 +145,20 @@ app.MapGet(
     "/pirates",
     (string? name, string? ship) =>
     {
-        Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Name == name && pirate.Ship == ship);
+        Pirate pirate = pirates.FirstOrDefault(pirate =>
+            pirate.Name == name && pirate.Ship == ship
+        );
+
+        return new GetPirateDTO
+        {
+            Id = pirate.Id,
+            Name = pirate.Name,
+            Age = pirate.Age,
+            Nationality = pirate.Nationality,
+            Rank = pirate.Rank,
+            Ship = pirate.Ship,
+            ImageUrl = pirate.ImageUrl,
+        };
     }
 );
 
@@ -154,18 +167,18 @@ app.MapGet(
 //post follower
 //delete follower
 
-app.MapGet("/stories", () =>
-{
-    return stories.Select(s => new StoryDTO
+app.MapGet(
+    "/stories",
+    () =>
     {
-        Id = s.Id,
-        PirateId = s.PirateId,
-        Title = s.Title,
-        Content = s.Content,
-
-    });
-});
-
-
+        return stories.Select(s => new StoryDTO
+        {
+            Id = s.Id,
+            PirateId = s.PirateId,
+            Title = s.Title,
+            Content = s.Content,
+        });
+    }
+);
 
 app.Run();
