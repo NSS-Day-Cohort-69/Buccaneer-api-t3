@@ -143,9 +143,22 @@ app.MapGet(
     "/followers",
     (int? followerId) =>
     {
-        
+        List<Follower> returningFollowers = followers;
+        if (followerId != null)
+        {
+            returningFollowers = returningFollowers
+                .Where(follower => follower.FollowerId == followerId)
+                .ToList();
+        }
+        return returningFollowers.Select(follower =>
+        new GetFollowerDTO
+        {
+
+        }
+        )
     }
 );
+
 //get pirate by id
 //get pirate with name and ship
 //get stories (expand pirate)
