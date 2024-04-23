@@ -147,10 +147,11 @@ app.MapGet(
     {
         List<Pirate> returnPirates = pirates;
 
-        // if(name != null)
-        // {
-
-        // }
+        if(name != null)
+        {
+            returnPirates = returnPirates.Where(pirate =>
+            pirate.Name == name).ToList();
+        }
 
         // Pirate pirate = pirates.FirstOrDefault(pirate =>
         //     pirate.Name == name && pirate.Ship == ship
