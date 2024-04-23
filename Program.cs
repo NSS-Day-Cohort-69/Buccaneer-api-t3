@@ -1,4 +1,5 @@
 using Buccaneer.Models;
+using Buccaneer.Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
