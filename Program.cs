@@ -232,9 +232,16 @@ app.MapGet(
 
 app.MapPost(
     "/followers",
-    () =>
+    (PostFollowerDTO follower) =>
     {
+        //
+        Pirate followerPirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.FollowerId);
+        Pirate followingPirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
 
+        if(followerPirate == null || followingPirate == null)
+        {
+            return Results.BadRequest();
+        }
     }
 );
 
