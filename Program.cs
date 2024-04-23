@@ -183,12 +183,46 @@ app.MapGet(
 
 //get pirate by id
 //get pirate with name and ship
+app.MapGet(
+    "/pirates",
+    (string? name, string? ship) =>
+    {
+        List<Pirate> returnPirates = pirates;
+
+        if (name != null)
+        {
+            returnPirates = returnPirates.Where(pirate => pirate.Name == name).ToList();
+        }
+
+        if (ship != null)
+        {
+            returnPirates = returnPirates.Where(pirate => pirate.Ship == ship).ToList();
+        }
+
+        if (returnPirates.Count == 0)
+        {
+            return Results.NotFound();
+        }
+
+        return Results.Ok(
+            returnPirates.Select(pirate => new GetPirateDTO
+            {
+                Id = pirate.Id,
+                Name = pirate.Name,
+                Age = pirate.Age,
+                Nationality = pirate.Nationality,
+                Rank = pirate.Rank,
+                Ship = pirate.Ship,
+                ImageUrl = pirate.ImageUrl,
+            })
+        );
+    }
+);
+
 //get stories (expand pirate)
 //get follower by follower id and pirate id
 //post follower
 //delete follower
-
-
 
 app.MapGet(
     "/pirates/{id}",
