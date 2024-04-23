@@ -1,5 +1,6 @@
 using Buccaneer.Models;
 using Buccaneer.Models.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -150,9 +151,15 @@ app.UseHttpsRedirection();
 
 app.MapGet(
     "/pirates/{id}",
-    (int? id) =>
+    (int id) =>
     {
+
         Pirate pirate = pirates.FirstOrDefault(p => p.Id == id);
+    
+        if (pirate == null)
+        {
+            return Results.BadRequest("Pirate ID is null");
+        }
 
         return Results.Ok(new PirateDTO
         {
