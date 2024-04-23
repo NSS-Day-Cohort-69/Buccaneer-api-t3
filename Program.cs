@@ -234,7 +234,7 @@ app.MapDelete("/followers/{id}", (int id) =>
 {
     Follower follower = followers.FirstOrDefault(f => f.Id == id);
 
-    if (followers == null)
+    if (follower == null)
     {
         return Results.NotFound();
     }
