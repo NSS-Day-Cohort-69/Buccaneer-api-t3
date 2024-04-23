@@ -149,27 +149,34 @@ app.MapGet(
             returningFollowers = returningFollowers
                 .Where(follower => follower.FollowerId == followerId)
                 .ToList();
-        }
-        return returningFollowers.Select(follower =>
-        {
-            Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
-            return new GetFollowerDTO
+
+            if (returningFollowers.Count == 0)
             {
-                Id = follower.Id,
-                PirateId = follower.PirateId,
-                FollowerId = follower.FollowerId,
-                Pirate = new GetFollowerPirateDTO
+                return Results.BadRequest();
+            }
+        }
+        return Results.Ok(
+            returningFollowers.Select(follower =>
+            {
+                Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
+                return new GetFollowerDTO
                 {
-                    Id = pirate.Id,
-                    Name = pirate.Name,
-                    Age = pirate.Age,
-                    Nationality = pirate.Nationality,
-                    Rank = pirate.Rank,
-                    Ship = pirate.Ship,
-                    ImageUrl = pirate.ImageUrl
-                }
-            };
-        });
+                    Id = follower.Id,
+                    PirateId = follower.PirateId,
+                    FollowerId = follower.FollowerId,
+                    Pirate = new GetFollowerPirateDTO
+                    {
+                        Id = pirate.Id,
+                        Name = pirate.Name,
+                        Age = pirate.Age,
+                        Nationality = pirate.Nationality,
+                        Rank = pirate.Rank,
+                        Ship = pirate.Ship,
+                        ImageUrl = pirate.ImageUrl
+                    }
+                };
+            })
+        );
     }
 );
 
@@ -180,16 +187,18 @@ app.MapGet(
 //post follower
 //delete follower
 
-app.MapGet("/stories", () =>
-{
-    return stories.Select(s => new StoryDTO
+app.MapGet(
+    "/stories",
+    () =>
     {
-        Id = s.Id,
-        PirateId = s.PirateId,
-        Title = s.Title,
-        Content = s.Content,
-
-    });
-});
+        return stories.Select(s => new StoryDTO
+        {
+            Id = s.Id,
+            PirateId = s.PirateId,
+            Title = s.Title,
+            Content = s.Content,
+        });
+    }
+);
 
 app.Run();
