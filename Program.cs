@@ -230,4 +230,12 @@ app.MapGet(
     }
 );
 
+app.MapPost(
+    "/followers",
+    () =>
+    {
+
+    }
+);
+
 app.Run();
