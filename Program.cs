@@ -147,28 +147,33 @@ app.MapGet(
     {
         List<Pirate> returnPirates = pirates;
 
-        if(name != null)
+        if (name != null)
         {
-            returnPirates = returnPirates.Where(pirate =>
-            pirate.Name == name).ToList();
+            returnPirates = returnPirates.Where(pirate => pirate.Name == name).ToList();
         }
 
-        if(ship != null)
+        if (ship != null)
         {
-            returnPirates = returnPirates.Where(pirate =>
-            pirate.Ship == ship).ToList();
+            returnPirates = returnPirates.Where(pirate => pirate.Ship == ship).ToList();
         }
 
-        return returnPirates.Select(pirate => new GetPirateDTO
+        if (returnPirates.Count == 0)
         {
-            Id = pirate.Id,
-            Name = pirate.Name,
-            Age = pirate.Age,
-            Nationality = pirate.Nationality,
-            Rank = pirate.Rank,
-            Ship = pirate.Ship,
-            ImageUrl = pirate.ImageUrl,
-        });
+            return Results.NotFound();
+        }
+
+        return Results.Ok(
+            returnPirates.Select(pirate => new GetPirateDTO
+            {
+                Id = pirate.Id,
+                Name = pirate.Name,
+                Age = pirate.Age,
+                Nationality = pirate.Nationality,
+                Rank = pirate.Rank,
+                Ship = pirate.Ship,
+                ImageUrl = pirate.ImageUrl,
+            })
+        );
     }
 );
 
