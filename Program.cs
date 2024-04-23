@@ -1,4 +1,6 @@
 using Buccaneer.Models;
+using Buccaneer.Models.DTOs;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -144,5 +146,27 @@ app.UseHttpsRedirection();
 //get follower by follower id and pirate id
 //post follower
 //delete follower
+
+
+
+app.MapGet(
+    "/pirates/{id}",
+    (int? id) =>
+    {
+        Pirate pirate = pirates.FirstOrDefault(p => p.Id == id);
+
+        return Results.Ok(new PirateDTO
+        {
+            Id = pirate.Id,
+            Name = pirate.Name,
+            Age = pirate.Age,
+            Nationality = pirate.Nationality,
+            Rank = pirate.Rank,
+            Ship = pirate.Ship,
+            ImageUrl = pirate.ImageUrl
+
+        });
+    } 
+);
 
 app.Run();
