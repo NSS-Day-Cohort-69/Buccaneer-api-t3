@@ -188,4 +188,30 @@ app.MapGet("/stories", () =>
     });
 });
 
+app.MapGet(
+    "/followers", (int? FollowerId, int? PirateId) =>
+    {
+    
+        List<Follower> returnedFollowers = followers;
+
+        if (FollowerId != null)
+        {
+            returnedFollowers = returnedFollowers.Where(follower => follower.FollowerId == FollowerId).ToList();
+        }
+        if (PirateId != null)
+        {
+            returnedFollowers = returnedFollowers.Where(follower => follower.PirateId == PirateId).ToList();
+        }
+        return
+            returnedFollowers.Select(follower => new GetFollowerDTO
+            {
+                Id = follower.Id,
+                PirateId = follower.PirateId,
+                FollowerId = follower.FollowerId
+            });
+        
+    }
+);
+
+
 app.Run();
