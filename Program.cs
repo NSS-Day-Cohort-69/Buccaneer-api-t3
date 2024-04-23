@@ -142,7 +142,7 @@ app.UseHttpsRedirection();
 //get favorite pirates (expand pirate)
 app.MapGet(
     "/followers",
-    (int? followerId) =>
+    (int? followerId, int? pirateId) =>
     {
         List<Follower> returningFollowers = followers;
         if (followerId != null)
@@ -156,6 +156,15 @@ app.MapGet(
                 return Results.BadRequest();
             }
         }
+        if (pirateId != null)
+        {
+            returningFollowers = returningFollowers.Where(follower => follower.PirateId == pirateId).ToList();
+        }
+        if (returningFollowers.Count == 0)
+        {
+            return Results.BadRequest();
+        }
+
         return Results.Ok(
             returningFollowers.Select(follower =>
             {
@@ -264,30 +273,6 @@ app.MapGet(
     }
 );
 
-app.MapGet(
-    "/followers{PirateId}/{FollowerId}", (int? FollowerId, int? PirateId) =>
-    {
-    
-        List<Follower> returnedFollowers = followers;
-
-        if (FollowerId != null)
-        {
-            returnedFollowers = returnedFollowers.Where(follower => follower.FollowerId == FollowerId).ToList();
-        }
-        if (PirateId != null)
-        {
-            returnedFollowers = returnedFollowers.Where(follower => follower.PirateId == PirateId).ToList();
-        }
-        return
-            returnedFollowers.Select(follower => new GetFollowerDTO
-            {
-                Id = follower.Id,
-                PirateId = follower.PirateId,
-                FollowerId = follower.FollowerId
-            });
-        
-    }
-);
 
 
 app.MapPost(
