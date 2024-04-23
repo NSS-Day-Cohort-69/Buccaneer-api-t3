@@ -230,4 +230,19 @@ app.MapGet(
     }
 );
 
+app.MapDelete("/followers/{id}", (int id) =>
+{
+    Follower follower = followers.FirstOrDefault(f => f.Id == id);
+
+    if (followers == null)
+    {
+        return Results.NotFound();
+    }
+
+    followers.Remove(follower);
+
+    return Results.NoContent();
+
+});
+
 app.Run();
