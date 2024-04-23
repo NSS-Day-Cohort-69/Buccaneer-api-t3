@@ -273,8 +273,20 @@ app.MapGet(
     }
 );
 
+app.MapDelete("/followers/{id}", (int id) =>
+{
+    Follower follower = followers.FirstOrDefault(f => f.Id == id);
 
+    if (follower == null)
+    {
+        return Results.NotFound();
+    }
 
+    followers.Remove(follower);
+
+    return Results.NoContent();
+
+});
 app.MapPost(
     "/followers",
     (PostFollowerDTO follower) =>
