@@ -145,7 +145,7 @@ app.MapGet(
     "/pirates",
     (string? name, string? ship) =>
     {
-        
+        Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Name == name && pirate.Ship == ship);
     }
 );
 
