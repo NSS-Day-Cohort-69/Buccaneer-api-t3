@@ -153,9 +153,11 @@ app.MapGet(
             pirate.Name == name).ToList();
         }
 
-        // Pirate pirate = pirates.FirstOrDefault(pirate =>
-        //     pirate.Name == name && pirate.Ship == ship
-        // );
+        if(ship != null)
+        {
+            returnPirates = returnPirates.Where(pirate =>
+            pirate.Ship == ship).ToList();
+        }
 
         return returnPirates.Select(pirate => new GetPirateDTO
         {
