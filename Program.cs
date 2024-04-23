@@ -141,6 +141,14 @@ app.UseHttpsRedirection();
 //get favorite pirates (expand pirate)
 //get pirate by id
 //get pirate with name and ship
+app.MapGet(
+    "/pirates",
+    (string? name, string? ship) =>
+    {
+        
+    }
+);
+
 //get stories (expand pirate)
 //get follower by follower id and pirate id
 //post follower
@@ -157,5 +165,7 @@ app.MapGet("/stories", () =>
 
     });
 });
+
+
 
 app.Run();
