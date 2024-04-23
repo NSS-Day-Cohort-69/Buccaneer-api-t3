@@ -264,4 +264,37 @@ app.MapGet(
     }
 );
 
+app.MapPost(
+    "/followers",
+    (PostFollowerDTO follower) =>
+    {
+        //gets the associated follower and followee to ensure they exist. If not, return bad request
+        Pirate followerPirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.FollowerId);
+        Pirate followingPirate = pirates.FirstOrDefault(pirate => pirate.Id == follower.PirateId);
+
+        if (followerPirate == null || followingPirate == null)
+        {
+            return Results.BadRequest();
+        }
+
+        Follower newFollower = new Follower
+        {
+            Id = followers.Max(follower => follower.Id) + 1,
+            PirateId = follower.PirateId,
+            FollowerId = follower.FollowerId
+        };
+
+        followers.Add(newFollower);
+
+        return Results.Ok(
+            new GetFollowerDTO
+            {
+                Id = newFollower.Id,
+                PirateId = newFollower.PirateId,
+                FollowerId = newFollower.FollowerId
+            }
+        );
+    }
+);
+
 app.Run();
