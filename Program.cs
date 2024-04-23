@@ -1,4 +1,5 @@
 using Buccaneer.Models;
+using Buccaneer.Models.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -144,5 +145,17 @@ app.UseHttpsRedirection();
 //get follower by follower id and pirate id
 //post follower
 //delete follower
+
+app.MapGet("/stories", () =>
+{
+    return stories.Select(s => new StoryDTO
+    {
+        Id = s.Id,
+        PirateId = s.PirateId,
+        Title = s.Title,
+        Content = s.Content,
+
+    });
+});
 
 app.Run();
