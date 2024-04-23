@@ -231,7 +231,7 @@ app.MapGet(
 );
 
 app.MapGet(
-    "/followers", (int? FollowerId, int? PirateId) =>
+    "/followers{PirateId}/{FollowerId}", (int? FollowerId, int? PirateId) =>
     {
     
         List<Follower> returnedFollowers = followers;
