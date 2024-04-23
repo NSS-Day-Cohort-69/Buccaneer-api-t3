@@ -180,4 +180,16 @@ app.MapGet(
 //post follower
 //delete follower
 
+app.MapGet("/stories", () =>
+{
+    return stories.Select(s => new StoryDTO
+    {
+        Id = s.Id,
+        PirateId = s.PirateId,
+        Title = s.Title,
+        Content = s.Content,
+
+    });
+});
+
 app.Run();
