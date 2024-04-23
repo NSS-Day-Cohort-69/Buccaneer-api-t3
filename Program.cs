@@ -1,7 +1,6 @@
 using Buccaneer.Models;
 using Buccaneer.Models.DTOs;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 List<Follower> followers = new List<Follower>
@@ -168,5 +167,18 @@ app.MapGet(
         });
     } 
 );
+
+
+app.MapGet("/stories", () =>
+{
+    return stories.Select(s => new StoryDTO
+    {
+        Id = s.Id,
+        PirateId = s.PirateId,
+        Title = s.Title,
+        Content = s.Content,
+
+    });
+});
 
 app.Run();
