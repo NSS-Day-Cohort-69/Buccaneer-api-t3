@@ -1,7 +1,6 @@
 using Buccaneer.Models;
 using Buccaneer.Models.DTOs;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 List<Follower> followers = new List<Follower>
@@ -115,7 +114,7 @@ List<Story> stories = new List<Story>
     new Story
     {
         Id = 5,
-        PirateId = 5,
+        PirateId = 2,
         Title = "The Curse of the Kraken",
         Content =
             "Legend had it that the Kraken would rise from the depths of the ocean to claim any ship that sailed too close to its lair. The crew of the Black Pearl had heard the tales, but they didn't believe them. That was until they saw the monstrous creature rise from the waves, its tentacles reaching out to grab them. They fought with all their might, but in the end, only a few managed to escape with their lives.",
@@ -127,6 +126,7 @@ List<Story> stories = new List<Story>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -135,8 +135,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors(options =>
+    {
+        options.AllowAnyOrigin();
+        options.AllowAnyMethod();
+        options.AllowAnyHeader();
+    });
 }
-
 app.UseHttpsRedirection();
 
 //get favorite pirates (expand pirate)
@@ -158,7 +163,9 @@ app.MapGet(
         }
         if (pirateId != null)
         {
-            returningFollowers = returningFollowers.Where(follower => follower.PirateId == pirateId).ToList();
+            returningFollowers = returningFollowers
+                .Where(follower => follower.PirateId == pirateId)
+                .ToList();
         }
         if (returningFollowers.Count == 0)
         {
@@ -263,30 +270,46 @@ app.MapGet(
     "/stories",
     () =>
     {
-        return stories.Select(s => new StoryDTO
+        return stories.Select(s =>
         {
-            Id = s.Id,
-            PirateId = s.PirateId,
-            Title = s.Title,
-            Content = s.Content,
+            Pirate pirate = pirates.FirstOrDefault(pirate => pirate.Id == s.PirateId);
+            return new StoryDTO
+            {
+                Id = s.Id,
+                PirateId = s.PirateId,
+                Title = s.Title,
+                Content = s.Content,
+                Pirate = new PirateDTO
+                {
+                    Id = pirate.Id,
+                    Name = pirate.Name,
+                    Age = pirate.Age,
+                    Nationality = pirate.Nationality,
+                    Rank = pirate.Rank,
+                    Ship = pirate.Ship,
+                    ImageUrl = pirate.ImageUrl
+                }
+            };
         });
     }
 );
 
-app.MapDelete("/followers/{id}", (int id) =>
-{
-    Follower follower = followers.FirstOrDefault(f => f.Id == id);
-
-    if (follower == null)
+app.MapDelete(
+    "/followers/{id}",
+    (int id) =>
     {
-        return Results.NotFound();
+        Follower follower = followers.FirstOrDefault(f => f.Id == id);
+
+        if (follower == null)
+        {
+            return Results.NotFound();
+        }
+
+        followers.Remove(follower);
+
+        return Results.NoContent();
     }
-
-    followers.Remove(follower);
-
-    return Results.NoContent();
-
-});
+);
 app.MapPost(
     "/followers",
     (PostFollowerDTO follower) =>
