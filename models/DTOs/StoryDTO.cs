@@ -1,4 +1,5 @@
 namespace Buccaneer.Models.DTOs;
+
 class StoryDTO
 {
     public int Id { get; set; }
@@ -6,4 +7,5 @@ class StoryDTO
     public string Title { get; set; }
     public string Content { get; set; }
     public DateTime Date { get; set; }
+    public PirateDTO Pirate { get; set; }
 }
